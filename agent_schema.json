@@ -1,0 +1,121 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Business Analyst Tools",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/calculate": {
+      "post": {
+        "summary": "Evaluate a math expression",
+        "description": "Use this to perform calculations like sums, percentages, averages",
+        "operationId": "calculate",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "expression": {
+                    "type": "string",
+                    "description": "Math expression, e.g. '1450000 - 1200000'"
+                  }
+                },
+                "required": ["expression"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Calculation result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {"result": {"type": "string"}}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sales-data": {
+      "post": {
+        "summary": "Look up quarterly sales data",
+        "description": "Use this to get revenue and units sold for a specific quarter",
+        "operationId": "getSalesData",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "period": {
+                    "type": "string",
+                    "description": "Quarter and year, e.g. 'Q2 2024'"
+                  }
+                },
+                "required": ["period"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sales data for the period",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "revenue": {"type": "number"},
+                    "units_sold": {"type": "number"},
+                    "region": {"type": "string"}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/web-search": {
+      "post": {
+        "summary": "Search the web for general information",
+        "description": "Use this for questions about current events or general facts",
+        "operationId": "webSearch",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "query": {"type": "string", "description": "Search query"}
+                },
+                "required": ["query"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Search result summary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {"result": {"type": "string"}}
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
