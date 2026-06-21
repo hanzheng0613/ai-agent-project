@@ -1,0 +1,9 @@
+.env
+venv/
+lambda_app.zip
+package/
+.DS_Store
+*.pyc
+__pycache__/
+out.json
+trust-policy.json

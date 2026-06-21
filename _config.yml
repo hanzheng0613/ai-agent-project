@@ -1,0 +1,9 @@
+exclude:
+  - venv/
+  - package/
+  - lambda_functions/
+  - __pycache__/
+  - "*.py"
+  - "*.zip"
+  - "*.json"
+  - requirements.txt
