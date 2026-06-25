@@ -1,3 +1,22 @@
+## Live Demo
+
+🌐 **[Try it live → hanzheng0613.github.io/ai-agent-project](https://hanzheng0613.github.io/ai-agent-project)**
+
+Ask the agent business questions directly in your browser — no setup required.
+
+**Example questions to try:**
+- "What was the revenue growth from Q1 2024 to Q4 2024?"
+- "What is 15% of Q4 2024 revenue?"
+- "Compare Q2 and Q3 2024 revenue"
+- "What was the total revenue across all 4 quarters of 2024?"
+
+**API endpoint (for developers):**
+POST https://h4fuklglb5.execute-api.us-east-1.amazonaws.com/prod/ask
+
+Content-Type: application/json
+{"question": "What was Q3 2024 revenue?"}
+
+
 # Business Analyst AI Agent
 
 An autonomous AI agent built on **AWS Bedrock Agents** that answers business questions by reasoning step-by-step and calling tools — a database lookup, a calculator, and a web search — to gather information and compute answers.
@@ -176,20 +195,4 @@ Interactive API docs available at `http://localhost:8000/docs`.
 - Add a Streamlit or React frontend for non-technical demo use
 - Containerize and deploy the FastAPI app to ECS Fargate or AWS Lambda for an always-on endpoint
 
-## Live Demo
 
-🌐 **[Try it live → hanzheng0613.github.io/ai-agent-project](https://hanzheng0613.github.io/ai-agent-project)**
-
-Ask the agent business questions directly in your browser — no setup required.
-
-**Example questions to try:**
-- "What was the revenue growth from Q1 2024 to Q4 2024?"
-- "What is 15% of Q4 2024 revenue?"
-- "Compare Q2 and Q3 2024 revenue"
-- "What was the total revenue across all 4 quarters of 2024?"
-
-**API endpoint (for developers):**
-POST https://h4fuklglb5.execute-api.us-east-1.amazonaws.com/prod/ask
-
-Content-Type: application/json
-{"question": "What was Q3 2024 revenue?"}
