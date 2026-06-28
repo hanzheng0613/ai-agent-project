@@ -12,3 +12,4 @@ __pycache__/
 out.json
 trust-policy.json
 *.zip
+agent-trust-policy.json
