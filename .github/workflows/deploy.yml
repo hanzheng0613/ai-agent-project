@@ -1,0 +1,105 @@
+name: Deploy Lambda Functions
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'lambda_functions/**'
+      - 'app.py'
+      - 'invoke_agent.py'
+
+jobs:
+  deploy-lambdas:
+    name: Deploy Lambda tools
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Deploy db_lookup Lambda
+        run: |
+          mkdir -p package_db
+          pip install psycopg2-binary \
+            --target ./package_db \
+            --platform manylinux2014_x86_64 \
+            --implementation cp \
+            --python-version 3.12 \
+            --only-binary=:all:
+          cp lambda_functions/db_lookup.py package_db/
+          cd package_db && zip -r ../db_lookup.zip . && cd ..
+          aws lambda update-function-code \
+            --function-name agent-db_lookup \
+            --zip-file fileb://db_lookup.zip \
+            --region ${{ secrets.AWS_REGION }}
+          echo "db_lookup deployed successfully"
+
+      - name: Deploy calculator Lambda
+        run: |
+          cd lambda_functions
+          zip calculator.zip calculator.py
+          cd ..
+          aws lambda update-function-code \
+            --function-name agent-calculator \
+            --zip-file fileb://lambda_functions/calculator.zip \
+            --region ${{ secrets.AWS_REGION }}
+          echo "calculator deployed successfully"
+
+      - name: Deploy web_search Lambda
+        run: |
+          cd lambda_functions
+          zip web_search.zip web_search.py
+          cd ..
+          aws lambda update-function-code \
+            --function-name agent-web_search \
+            --zip-file fileb://lambda_functions/web_search.zip \
+            --region ${{ secrets.AWS_REGION }}
+          echo "web_search deployed successfully"
+
+      - name: Deploy FastAPI Lambda
+        run: |
+          mkdir -p package_api
+          pip install boto3 fastapi mangum python-dotenv requests \
+            --target ./package_api \
+            --platform manylinux2014_x86_64 \
+            --implementation cp \
+            --python-version 3.12 \
+            --only-binary=:all:
+          cp app.py invoke_agent.py package_api/
+          cd package_api && zip -r ../lambda_app.zip . && cd ..
+          aws lambda update-function-code \
+            --function-name business-analyst-api \
+            --zip-file fileb://lambda_app.zip \
+            --region ${{ secrets.AWS_REGION }}
+          aws lambda update-function-configuration \
+            --function-name business-analyst-api \
+            --environment Variables="{BEDROCK_AGENT_ID=${{ secrets.BEDROCK_AGENT_ID }},BEDROCK_AGENT_ALIAS_ID=${{ secrets.BEDROCK_AGENT_ALIAS_ID }}}" \
+            --region ${{ secrets.AWS_REGION }}
+          echo "FastAPI Lambda deployed successfully"
+
+  notify:
+    name: Notify deployment status
+    runs-on: ubuntu-latest
+    needs: deploy-lambdas
+    if: always()
+    steps:
+      - name: Print status
+        run: |
+          if [ "${{ needs.deploy-lambdas.result }}" == "success" ]; then
+            echo "✅ All Lambda functions deployed successfully"
+            echo "🌐 Live at: https://h4fuklglb5.execute-api.us-east-1.amazonaws.com/prod/ask"
+          else
+            echo "❌ Deployment failed - check logs above"
+          fi
