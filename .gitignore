@@ -1,9 +1,14 @@
 .env
 venv/
 lambda_app.zip
+db_lookup_bundle.zip
+db_lookup_package/
+deployed.zip
+response.json
 package/
 .DS_Store
 *.pyc
 __pycache__/
 out.json
 trust-policy.json
+*.zip
