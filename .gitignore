@@ -13,3 +13,5 @@ out.json
 trust-policy.json
 *.zip
 agent-trust-policy.json
+agent-collaboration-policy.json
+agent-trust-policy.json
